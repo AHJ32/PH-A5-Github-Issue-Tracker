@@ -37,7 +37,30 @@
       }
     </style>
   </head>
-  <body class="geist">
-    <h2>Hello World</h2>
+  <body class="geist bg-[#f8fafc] rounded-lg">
+    <main class="min-h-dvh mx-auto w-[90%] my-4 bg-[#FFFFFF] shadow">
+      <div class="login-top mx-auto text-center">
+        <img
+          class="mx-auto mb-6"
+          src="./assets/github-logo.png"
+          alt="Github logo"
+        />
+        <h2 class="font-semibold text-[1.5rem]">GitHub Issues Tracker</h2>
+        <p>Sign in to manage your issues</p>
+      </div>
+      <fieldset
+        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+      >
+        <legend class="fieldset-legend">Login</legend>
+
+        <label class="label">Email</label>
+        <input type="email" class="input" placeholder="Email" />
+
+        <label class="label">Password</label>
+        <input type="password" class="input" placeholder="Password" />
+
+        <button class="btn btn-neutral mt-4">Login</button>
+      </fieldset>
+    </main>
   </body>
 </html>
