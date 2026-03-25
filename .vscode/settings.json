@@ -1,0 +1,7 @@
+{
+    "fiveServer.highlight": false,
+    "fiveServer.host": "192.168.0.200",
+    "fiveServer.injectBody": false,
+    "fiveServer.navigate": true,
+    "fiveServer.port": 3000
+}

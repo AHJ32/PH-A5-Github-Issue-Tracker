@@ -46,20 +46,24 @@
           alt="Github logo"
         />
         <h2 class="font-semibold text-[1.5rem]">GitHub Issues Tracker</h2>
-        <p>Sign in to manage your issues</p>
+        <p class="font-normal text-[1rem] text-[#64748B]">
+          Sign in to manage your issues
+        </p>
       </div>
-      <fieldset
-        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
-      >
-        <legend class="fieldset-legend">Login</legend>
-
-        <label class="label">Email</label>
-        <input type="email" class="input" placeholder="Email" />
-
-        <label class="label">Password</label>
+      <fieldset class="fieldset rounded-box w-xs px-4 py-6">
+        <label class="label font-medium text-[1rem] text-[#1F2937]"
+          >Username</label
+        >
+        <input type="email" class="input" placeholder="Enter Username" />
+        <p class="font-normal text-[.875rem] text-[#4A00FF]">Default: admin</p>
+        <label class="label font-medium text-[1rem] text-[#1F2937] mt-4"
+          >Password</label
+        >
         <input type="password" class="input" placeholder="Password" />
-
-        <button class="btn btn-neutral mt-4">Login</button>
+        <p class="font-normal text-[.875rem] text-[#4A00FF] mb-6">
+          Default: admin123
+        </p>
+        <button class="btn btn-primary mt-4">Sign In</button>
       </fieldset>
     </main>
   </body>
