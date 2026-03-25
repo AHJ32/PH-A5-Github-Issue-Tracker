@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <!-- Tailwind+DaisyUI CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Remix Icon -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css"
+      integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .geist {
+        font-family: "Geist", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="geist bg-[#f8fafc] rounded-lg">
+    <main class="min-h-dvh mx-auto w-[90%] my-4 bg-[#FFFFFF] shadow">
+      <div class="login-top mx-auto text-center">
+        <img
+          class="mx-auto mb-6"
+          src="./assets/github-logo.png"
+          alt="Github logo"
+        />
+        <h2 class="font-semibold text-[1.5rem]">GitHub Issues Tracker</h2>
+        <p>Sign in to manage your issues</p>
+      </div>
+      <fieldset
+        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+      >
+        <legend class="fieldset-legend">Login</legend>
+
+        <label class="label">Email</label>
+        <input type="email" class="input" placeholder="Email" />
+
+        <label class="label">Password</label>
+        <input type="password" class="input" placeholder="Password" />
+
+        <button class="btn btn-neutral mt-4">Login</button>
+      </fieldset>
+    </main>
+  </body>
+</html>
