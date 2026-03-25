@@ -38,33 +38,66 @@
     </style>
   </head>
   <body class="geist bg-[#f8fafc] rounded-lg">
-    <main class="min-h-dvh mx-auto w-[90%] my-4 bg-[#FFFFFF] shadow">
-      <div class="login-top mx-auto text-center">
-        <img
-          class="mx-auto mb-6"
-          src="./assets/github-logo.png"
-          alt="Github logo"
-        />
-        <h2 class="font-semibold text-[1.5rem]">GitHub Issues Tracker</h2>
-        <p class="font-normal text-[1rem] text-[#64748B]">
-          Sign in to manage your issues
-        </p>
+    <main
+      class="min-h-dvh mx-auto w-[90%] my-4 bg-[#FFFFFF] rounded-lg shadow py-4"
+    >
+      <div class="w-[90%] mx-auto">
+        <div class="login-top mx-auto text-center">
+          <img
+            class="mx-auto mb-6"
+            src="./assets/github-logo.png"
+            alt="Github logo"
+          />
+          <h2 class="font-semibold text-[1.5rem]">GitHub Issues Tracker</h2>
+          <p class="font-normal text-[1rem] text-[#64748B]">
+            Sign in to manage your issues
+          </p>
+        </div>
+        <fieldset class="fieldset rounded-box py-6">
+          <label class="label font-medium text-[1rem] text-[#1F2937]"
+            >Username</label
+          >
+          <input
+            type="email"
+            class="input w-full"
+            placeholder="Enter Username"
+          />
+          <p class="font-normal text-[.875rem] text-[#4A00FF]">
+            Default: admin
+          </p>
+          <label class="label font-medium text-[1rem] text-[#1F2937] mt-4"
+            >Password</label
+          >
+          <input type="password" class="input w-full" placeholder="Password" />
+          <p class="font-normal text-[.875rem] text-[#4A00FF] mb-6">
+            Default: admin123
+          </p>
+          <button class="btn btn-primary mt-4">Sign In</button>
+        </fieldset>
+        <div class="magic">
+          <div class="flex items-center">
+            <div class="flex-grow border-t border-[#E4E4E7]"></div>
+            <span
+              class="mx-4 flex-shrink text-[#1F2937] font-normal text-[1rem]"
+              >OR</span
+            >
+            <div class="flex-grow border-t border-[#E4E4E7]"></div>
+          </div>
+        </div>
+        <div class="px-2 mt-6 text-center">
+          <p class="font-normal text-[.875rem] text=[#64748B]">
+            Demo Credentials:
+          </p>
+          <div class="mt-2 py-6 bg-[#F8FAFC] rounded-lg">
+            <p class="font-semibold">
+              Username: <span class="font-normal">admin</span>
+            </p>
+            <p class="font-semibold">
+              Password: <span class="font-normal">admin123</span>
+            </p>
+          </div>
+        </div>
       </div>
-      <fieldset class="fieldset rounded-box w-xs px-4 py-6">
-        <label class="label font-medium text-[1rem] text-[#1F2937]"
-          >Username</label
-        >
-        <input type="email" class="input" placeholder="Enter Username" />
-        <p class="font-normal text-[.875rem] text-[#4A00FF]">Default: admin</p>
-        <label class="label font-medium text-[1rem] text-[#1F2937] mt-4"
-          >Password</label
-        >
-        <input type="password" class="input" placeholder="Password" />
-        <p class="font-normal text-[.875rem] text-[#4A00FF] mb-6">
-          Default: admin123
-        </p>
-        <button class="btn btn-primary mt-4">Sign In</button>
-      </fieldset>
     </main>
   </body>
 </html>
