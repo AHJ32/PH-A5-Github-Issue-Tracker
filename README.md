@@ -3,7 +3,7 @@
   A GitHub Issues Tracker web app built with vanilla HTML, CSS (Tailwind + DaisyUI), and JavaScript.
 
   ## 🔗 Live Site
-  [GitHub Issues Tracker](#)
+  [GitHub Issues Tracker](https://ahj32.github.io/PH-A5-Github-Issue-Tracker/)
 
   ## 🔑 Demo Credentials
   ```
