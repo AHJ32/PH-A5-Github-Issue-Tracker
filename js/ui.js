@@ -1,6 +1,6 @@
 // ui.js
 
-function formatDate(d){if(!d)return 'N/A';var x=new Date(d);return String(x.getDate()).padStart(2,'0')+'/'+String(x.getMonth()+1).padStart(2,'0')+'/'+x.getFullYear();}
+function formatDate(d){if(!d)return 'N/A';var x=new Date(d);return (x.getMonth()+1)+'/'+x.getDate()+'/'+x.getFullYear();}
 
 function priorityBadge(priority){
   if(!priority)return '';
