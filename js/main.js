@@ -1,44 +1,39 @@
-import { fetchAllIssues, searchIssues } from "./api.js";
-  import { buildCard, buildModal } from "./ui.js";
+// GitHub Issues Tracker — Main v1774705237990
+  import { fetchAllIssues, searchIssues } from "./api.js?v=1774705237990";
+  import { buildCard, buildModal } from "./ui.js?v=1774705237990";
 
-  const grid         = document.getElementById("issuesGrid");
-  const spinner      = document.getElementById("spinner");
-  const noResults    = document.getElementById("noResults");
-  const issueCount   = document.getElementById("issueCount");
-  const modal        = document.getElementById("issueModal");
-  const modalContent = document.getElementById("modalContent");
-  const searchInput  = document.getElementById("searchInput");
+  var grid        = document.getElementById("issuesGrid");
+  var spinner     = document.getElementById("spinner");
+  var noResults   = document.getElementById("noResults");
+  var issueCount  = document.getElementById("issueCount");
+  var modal       = document.getElementById("issueModal");
+  var modalContent = document.getElementById("modalContent");
+  var searchInput = document.getElementById("searchInput");
 
-  let allIssues  = [];
-  let currentTab = "all";
+  var allIssues  = [];
+  var currentTab = "all";
 
   function setLoading(on) {
-    if (on) {
-      spinner.classList.add("show");
-      grid.innerHTML = "";
-      noResults.classList.remove("show");
-    } else {
-      spinner.classList.remove("show");
-    }
+    spinner.style.display = on ? "flex" : "none";
+    if (on) { grid.innerHTML = ""; noResults.style.display = "none"; }
   }
 
-  // Count reflects whichever issues are currently displayed
-  function setCount(issues) {
-    issueCount.textContent = `${issues.length} Issue${issues.length !== 1 ? "s" : ""}`;
+  function setCount(n) {
+    issueCount.textContent = n + " Issue" + (n !== 1 ? "s" : "");
   }
 
   function renderIssues(issues) {
-    setCount(issues);
+    setCount(issues.length);
     if (!issues.length) {
       grid.innerHTML = "";
-      noResults.classList.add("show");
+      noResults.style.display = "block";
       return;
     }
-    noResults.classList.remove("show");
+    noResults.style.display = "none";
     grid.innerHTML = issues.map(buildCard).join("");
-    grid.querySelectorAll(".issue-card").forEach((card) => {
-      card.addEventListener("click", () => {
-        const issue = allIssues.find((i) => String(i.id) === card.dataset.id);
+    grid.querySelectorAll(".issue-card").forEach(function(card) {
+      card.addEventListener("click", function() {
+        var issue = allIssues.find(function(i) { return String(i.id) === card.dataset.id; });
         if (issue) { modalContent.innerHTML = buildModal(issue); modal.showModal(); }
       });
     });
@@ -46,67 +41,54 @@ import { fetchAllIssues, searchIssues } from "./api.js";
 
   function filterByTab(tab) {
     if (tab === "all") return allIssues;
-    return allIssues.filter((i) => i.status?.toLowerCase() === tab);
+    return allIssues.filter(function(i) { return (i.status || "").toLowerCase() === tab; });
   }
 
   function setActiveTab(tab) {
     currentTab = tab;
-    document.querySelectorAll(".tab-btn").forEach((b) => {
+    document.querySelectorAll(".tab-btn").forEach(function(b) {
       b.classList.remove("tab-btn-active");
-      b.classList.add("bg-white", "text-[#374151]");
+      b.style.backgroundColor = "";
+      b.style.color = "";
+      b.style.borderColor = "";
     });
-    const active = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
-    if (active) {
-      active.classList.add("tab-btn-active");
-      active.classList.remove("bg-white", "text-[#374151]");
-    }
+    var active = document.querySelector(".tab-btn[data-tab=\"" + tab + "\"]");
+    if (active) active.classList.add("tab-btn-active");
   }
 
-  // Tab clicks
-  document.querySelectorAll(".tab-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+  document.querySelectorAll(".tab-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
       setActiveTab(btn.dataset.tab);
       searchInput.value = "";
       renderIssues(filterByTab(currentTab));
     });
   });
 
-  // Search
-  async function handleSearch() {
-    const query = searchInput.value.trim();
+  searchInput.addEventListener("keydown", function(e) {
+    if (e.key !== "Enter") return;
+    var query = searchInput.value.trim();
     if (!query) { renderIssues(filterByTab(currentTab)); return; }
     setLoading(true);
-    try {
-      const results = await searchIssues(query);
-      const map = new Map(allIssues.map((i) => [String(i.id), i]));
-      results.forEach((i) => map.set(String(i.id), i));
-      allIssues = [...map.values()];
+    searchIssues(query).then(function(results) {
+      var map = {};
+      allIssues.forEach(function(i) { map[String(i.id)] = i; });
+      results.forEach(function(i) { map[String(i.id)] = i; });
+      allIssues = Object.values(map);
       renderIssues(results);
-    } catch (err) {
+    }).catch(function(err) {
       console.error(err);
-      grid.innerHTML = `<p class="text-red-500 col-span-4 text-center py-10">Search failed.</p>`;
-      setCount([]);
-    } finally {
-      setLoading(false);
-    }
-  }
+      grid.innerHTML = "<p class=\"text-red-500 col-span-4 text-center py-10\">Search failed.</p>";
+      setCount(0);
+    }).finally(function() { setLoading(false); });
+  });
 
-  searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handleSearch(); });
-
-  // Init
-  async function init() {
-    setLoading(true);
-    try {
-      allIssues = await fetchAllIssues();
-      renderIssues(filterByTab(currentTab));
-    } catch (err) {
-      console.error(err);
-      grid.innerHTML = `<p class="text-red-500 col-span-4 text-center py-10">Failed to load issues.</p>`;
-      setCount([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  init();
+  setLoading(true);
+  fetchAllIssues().then(function(data) {
+    allIssues = data;
+    renderIssues(filterByTab(currentTab));
+  }).catch(function(err) {
+    console.error("Fetch error:", err);
+    grid.innerHTML = "<p class=\"text-red-500 col-span-4 text-center py-10\">Failed to load issues: " + err.message + "</p>";
+    setCount(0);
+  }).finally(function() { setLoading(false); });
   
