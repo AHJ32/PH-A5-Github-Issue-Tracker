@@ -37,10 +37,8 @@
       }
     </style>
   </head>
-  <body class="geist bg-[#f8fafc] rounded-lg">
-    <main
-      class="min-h-dvh mx-auto w-[90%] my-4 bg-[#FFFFFF] rounded-lg shadow py-4"
-    >
+  <body class="geist bg-[#f8fafc] flex flex-col items-center justify-center min-h-screen">
+    <main class="w-[90%] lg:w-[80%] lg:max-w-md mx-auto my-6 bg-[#FFFFFF] rounded-lg shadow py-6">
       <div class="w-[90%] mx-auto">
         <div class="login-top mx-auto text-center">
           <img
@@ -53,12 +51,13 @@
             Sign in to manage your issues
           </p>
         </div>
-        <fieldset class="fieldset rounded-box py-6">
+        <form id="loginForm" class="fieldset rounded-box py-6">
           <label class="label font-medium text-[1rem] text-[#1F2937]"
             >Username</label
           >
           <input
-            type="email"
+            type="text"
+            id="username"
             class="input w-full"
             placeholder="Enter Username"
           />
@@ -68,12 +67,12 @@
           <label class="label font-medium text-[1rem] text-[#1F2937] mt-4"
             >Password</label
           >
-          <input type="password" class="input w-full" placeholder="Password" />
+          <input type="password" id="password" class="input w-full" placeholder="Password" />
           <p class="font-normal text-[.875rem] text-[#4A00FF] mb-6">
             Default: admin123
           </p>
-          <button class="btn btn-primary mt-4">Sign In</button>
-        </fieldset>
+          <button type="submit" class="btn btn-primary mt-4">Sign In</button>
+        </form>
         <div class="magic">
           <div class="flex items-center">
             <div class="flex-grow border-t border-[#E4E4E7]"></div>
@@ -99,5 +98,6 @@
         </div>
       </div>
     </main>
+    <script src="./js/login.js" type="module"></script>
   </body>
 </html>
