@@ -1,6 +1,6 @@
-// main.js v1774710039498
-import { fetchAllIssues, searchIssues } from './api.js?v=1774710039498';
-import { buildCard, buildModal } from './ui.js?v=1774710039498';
+// main.js v1774725523436
+import { fetchAllIssues, searchIssues } from './api.js?v=1774725523436';
+import { buildCard, buildModal } from './ui.js?v=1774725523436';
 
 var grid=document.getElementById('issuesGrid');
 var spinner=document.getElementById('spinner');
