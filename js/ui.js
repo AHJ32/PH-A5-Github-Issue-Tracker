@@ -1,9 +1,9 @@
-// ui.js v1774707898675
+// ui.js v1774708041125
 
   function formatDate(dateStr) {
     if (!dateStr) return "N/A";
     var d = new Date(dateStr);
-    return String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0") + "/" + d.getFullYear();
+    return String(d.getMonth()+1) + "/" + String(d.getDate()) + "/" + d.getFullYear();
   }
 
   function priorityBadge(priority) {
@@ -18,11 +18,11 @@
       : (typeof labels==="string" ? labels.split(",").map(function(l){return l.trim();}).filter(Boolean) : []);
     if (!list.length) return "";
     var colors = {
-      "bug":           "bg-orange-100 text-orange-600 border border-orange-300",
-      "help wanted":   "bg-green-100 text-green-700 border border-green-300",
-      "enhancement":   "bg-teal-100 text-teal-700 border border-teal-300",
-      "documentation": "bg-blue-100 text-blue-700 border border-blue-300",
-      "question":      "bg-purple-100 text-purple-700 border border-purple-300",
+      "bug":           "bg-orange-100 text-orange-600 border border-orange-200",
+      "help wanted":   "bg-green-100 text-green-700 border border-green-200",
+      "enhancement":   "bg-teal-100 text-teal-700 border border-teal-200",
+      "documentation": "bg-blue-100 text-blue-700 border border-blue-200",
+      "question":      "bg-purple-100 text-purple-700 border border-purple-200",
     };
     return list.map(function(l) {
       var cls = colors[l.toLowerCase()] || "bg-gray-100 text-gray-600 border border-gray-200";
@@ -52,63 +52,39 @@
   }
 
   export function buildModal(issue) {
-    var isOpen = (issue.status||"").toLowerCase()==="open";
+    var isOpen   = (issue.status||"").toLowerCase() === "open";
+    var topColor = isOpen ? "#22c55e" : "#a855f7";
 
-    /* Status badge */
-    var statusLabel = isOpen ? "Opened" : "Closed";
-    var statusStyle = isOpen
-      ? "background:#22c55e;color:#fff;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:9999px;"
-      : "background:#a855f7;color:#fff;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:9999px;";
+    var statusPill = isOpen
+      ? '<span style="background:#dcfce7;color:#16a34a;border:1.5px solid #86efac;font-size:.72rem;font-weight:600;padding:3px 12px;border-radius:9999px;">open</span>'
+      : '<span style="background:#f3e8ff;color:#9333ea;border:1.5px solid #d8b4fe;font-size:.72rem;font-weight:600;padding:3px 12px;border-radius:9999px;">closed</span>';
 
-    /* Priority badge for info box */
     var prio = (issue.priority||"").toUpperCase();
-    var prioColors = { HIGH:"#dc2626", MEDIUM:"#ea580c", LOW:"#64748b" };
-    var prioStyle = "background:"+(isOpen?"#fee2e2":"#f1f5f9")+";color:"+(prioColors[prio]||"#64748b")+";font-size:.72rem;font-weight:700;padding:3px 14px;border-radius:9999px;";
-    if (prio === "HIGH")   prioStyle = "background:#fee2e2;color:#dc2626;font-size:.72rem;font-weight:700;padding:3px 14px;border-radius:9999px;";
-    if (prio === "MEDIUM") prioStyle = "background:#fff7ed;color:#ea580c;font-size:.72rem;font-weight:700;padding:3px 14px;border-radius:9999px;";
-    if (prio === "LOW")    prioStyle = "background:#f1f5f9;color:#64748b;font-size:.72rem;font-weight:700;padding:3px 14px;border-radius:9999px;";
+    var prioPill = "";
+    if (prio) {
+      var ps = { HIGH:"background:#fce7f3;color:#be185d;border:1.5px solid #f9a8d4;", MEDIUM:"background:#fff7ed;color:#c2410c;border:1.5px solid #fdba74;", LOW:"background:#f1f5f9;color:#64748b;border:1.5px solid #cbd5e1;" };
+      prioPill = '<span style="'+(ps[prio]||ps.LOW)+'font-size:.72rem;font-weight:600;padding:3px 12px;border-radius:9999px;">'+prio+"</span>";
+    }
 
-    var author = issue.author || "Unknown";
-    var date   = formatDate(issue.createdAt);
+    var labels   = Array.isArray(issue.labels) ? issue.labels : (issue.label ? [issue.label] : []);
+    var labelsStr = labels.join(", ") || "N/A";
+    var author   = issue.author || "Unknown";
+    var date     = formatDate(issue.createdAt);
+    var pVal     = (issue.priority||"").toLowerCase() || "N/A";
 
     return (
-      /* ① TITLE */
-      '<h2 style="font-size:1.2rem;font-weight:800;color:#111827;margin-bottom:12px;line-height:1.3;">'+(issue.title||"Untitled")+"</h2>" +
-
-      /* ② STATUS ROW:  [Opened] • Opened by X • date */
-      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">' +
-        '<span style="'+statusStyle+'">'+statusLabel+"</span>" +
-        '<span style="color:#9ca3af;font-size:.85rem;">&#8226;</span>' +
-        '<span style="color:#6b7280;font-size:.82rem;">'+statusLabel+" by "+author+"</span>" +
-        '<span style="color:#9ca3af;font-size:.85rem;">&#8226;</span>' +
-        '<span style="color:#6b7280;font-size:.82rem;">'+date+"</span>" +
-      "</div>" +
-
-      /* ③ LABEL PILLS */
-      (issue.labels&&issue.labels.length || issue.label
-        ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">' + labelPills(issue.labels||issue.label) + "</div>"
-        : "") +
-
-      /* ④ DESCRIPTION */
-      '<p style="color:#374151;font-size:.875rem;line-height:1.7;margin-bottom:20px;">'+(issue.description||"No description provided.")+"</p>" +
-
-      /* ⑤ 2-COL INFO BOX */
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:10px;overflow:hidden;margin-bottom:20px;">' +
-        '<div style="background:#f8fafc;padding:14px 18px;">' +
-          '<p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Assignee</p>' +
-          '<p style="font-size:.9rem;font-weight:700;color:#111827;">'+author+"</p>" +
+      '<div style="border-top:3px solid '+topColor+';padding-top:16px;">' +
+        '<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">'+statusPill+prioPill+"</div>" +
+        '<h2 style="font-size:1.15rem;font-weight:800;color:#111827;margin-bottom:10px;line-height:1.35;">'+(issue.title||"Untitled")+"</h2>" +
+        '<p style="color:#4b5563;font-size:.875rem;line-height:1.7;margin-bottom:16px;">'+(issue.description||"No description provided.")+"</p>" +
+        (labels.length ? '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;">'+labelPills(issue.labels||issue.label)+"</div>" : "") +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:10px;overflow:hidden;margin-bottom:14px;">' +
+          '<div style="background:#f8fafc;padding:14px 16px;"><p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">AUTHOR</p><p style="font-size:.875rem;font-weight:600;color:#111827;">'+author+"</p></div>" +
+          '<div style="background:#f8fafc;padding:14px 16px;"><p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">PRIORITY</p><p style="font-size:.875rem;font-weight:600;color:#111827;">'+pVal+"</p></div>" +
+          '<div style="background:#f8fafc;padding:14px 16px;"><p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">LABELS</p><p style="font-size:.875rem;font-weight:600;color:#111827;">'+labelsStr+"</p></div>" +
+          '<div style="background:#f8fafc;padding:14px 16px;"><p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;">CREATED AT</p><p style="font-size:.875rem;font-weight:600;color:#111827;">'+date+"</p></div>" +
         "</div>" +
-        '<div style="background:#f8fafc;padding:14px 18px;">' +
-          '<p style="font-size:.65rem;font-weight:700;color:#9ca3af;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Priority</p>' +
-          '<span style="'+prioStyle+'">'+prio+"</span>" +
-        "</div>" +
-      "</div>" +
-
-      /* ⑥ CLOSE BUTTON bottom-right */
-      '<div style="display:flex;justify-content:flex-end;">' +
-        '<form method="dialog" style="margin:0;">' +
-          '<button style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:.875rem;font-weight:600;cursor:pointer;letter-spacing:.01em;">Close</button>' +
-        "</form>" +
+        '<p style="font-size:.72rem;color:#9ca3af;">Issue #'+(issue.id||"?")+"</p>" +
       "</div>"
     );
   }
