@@ -15,9 +15,9 @@
         * { font-family: "Geist", sans-serif; }
         .card-open   { border-top: 3px solid #22c55e; }
         .card-closed { border-top: 3px solid #a855f7; }
-        #spinner     { display: none; }
+        #spinner      { display: none; }
         #spinner.show { display: flex; }
-        #noResults   { display: none; }
+        #noResults      { display: none; }
         #noResults.show { display: block; }
         .tab-btn-active {
           background-color: #6366f1 !important;
@@ -80,27 +80,26 @@
           <!-- Panel Header -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 border-b border-[#f1f5f9]">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                <i class="ri-github-fill text-indigo-600 text-xl"></i>
-              </div>
+              <img src="./assets/Aperture.png" alt="Aperture" class="w-10 h-10 rounded-full object-cover" />
               <div>
                 <p id="issueCount" class="font-bold text-[1.05rem] text-[#1F2937]">0 Issues</p>
                 <p class="text-xs text-[#64748b]">Track and manage your project issues</p>
               </div>
             </div>
+            <!-- Static labels only — no dynamic counts -->
             <div class="flex items-center gap-4 mt-3 sm:mt-0 text-sm">
               <span class="flex items-center gap-1.5 text-[#374151]">
                 <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
-                <span id="openCount">0 Open</span>
+                Open
               </span>
               <span class="flex items-center gap-1.5 text-[#374151]">
                 <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span>
-                <span id="closedCount">0 Closed</span>
+                Closed
               </span>
             </div>
           </div>
 
-          <!-- SPINNER (shown by default until JS runs) -->
+          <!-- SPINNER -->
           <div id="spinner" class="show flex justify-center items-center py-16">
             <span class="loading loading-spinner loading-md text-indigo-600"></span>
             <span class="ml-3 text-sm text-[#64748b]">Loading issues...</span>
@@ -109,7 +108,7 @@
           <!-- GRID -->
           <div id="issuesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4"></div>
 
-          <!-- NO RESULTS (hidden by default via CSS) -->
+          <!-- NO RESULTS -->
           <div id="noResults" class="text-center py-16 text-[#94a3b8]">
             <i class="ri-search-eye-line text-4xl mb-3 block"></i>
             <p class="font-medium">No issues found</p>
@@ -132,4 +131,3 @@
       <script src="./js/main.js" type="module"></script>
     </body>
   </html>
-  
