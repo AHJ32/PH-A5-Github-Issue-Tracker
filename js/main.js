@@ -76,8 +76,7 @@ function doSearch(){
 
 searchInput.addEventListener('keydown',function(e){ if(e.key==='Enter') doSearch(); });
 if(searchBtn) searchBtn.addEventListener('click', doSearch);
-var newIssueBtn=document.getElementById('newIssueBtn');
-if(newIssueBtn) newIssueBtn.addEventListener('click', doSearch);
+
 
 // Initial load
 showSpinner();
