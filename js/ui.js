@@ -29,7 +29,7 @@ function cardLabelPills(labels){
 
 function statusIcon(status){
   var isOpen=(status||'').toLowerCase()==='open';
-  return '<i class="ri-settings-3-line '+(isOpen?'text-green-500':'text-purple-500')+' text-lg"></i>';
+  return '<i class="'+(isOpen?'ri-checkbox-circle-line text-green-500':'ri-close-circle-line text-purple-500')+' text-lg"></i>';
 }
 
 export function buildCard(issue){
