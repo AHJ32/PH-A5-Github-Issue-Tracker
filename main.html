@@ -7,7 +7,7 @@
       <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
       <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" crossorigin="anonymous" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
       <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet" />
@@ -15,10 +15,6 @@
         * { font-family: "Geist", sans-serif; }
         .card-open   { border-top: 3px solid #22c55e; }
         .card-closed { border-top: 3px solid #a855f7; }
-        #spinner      { display: none; }
-        #spinner.show { display: flex; }
-        #noResults      { display: none; }
-        #noResults.show { display: block; }
         .tab-btn-active {
           background-color: #6366f1 !important;
           color: #fff !important;
@@ -40,76 +36,79 @@
     </head>
     <body class="bg-[#f1f5f9] min-h-screen">
 
-      <!-- NAVBAR -->
-      <nav class="bg-white border-b border-[#e4e4e7] px-6 py-3 sticky top-0 z-20 shadow-sm">
-        <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          <div class="flex items-center gap-2">
+      <!-- NAVBAR — stacks on mobile -->
+      <nav class="bg-white border-b border-[#e4e4e7] px-4 sm:px-6 py-3 sticky top-0 z-20 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3">
+          <!-- Logo + Title -->
+          <div class="flex items-center gap-2 flex-shrink-0">
             <img src="./assets/github-logo.png" alt="GitHub Logo" class="w-8 h-8" />
             <span class="font-semibold text-[1.05rem] text-[#1F2937]">GitHub Issues Tracker</span>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="relative">
+          <!-- Search + Button -->
+          <div class="flex items-center gap-2 sm:ml-auto w-full sm:w-auto">
+            <div class="relative flex-1 sm:flex-none">
               <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8] text-sm"></i>
               <input id="searchInput" type="text" placeholder="Search issues..."
-                class="pl-9 pr-4 py-2 border border-[#e4e4e7] rounded-lg text-sm w-56 focus:outline-none focus:border-indigo-400 bg-[#f8fafc]" />
+                class="pl-9 pr-4 py-2 border border-[#e4e4e7] rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:border-indigo-400 bg-[#f8fafc]" />
             </div>
             <button id="newIssueBtn"
-              class="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-              <i class="ri-add-line"></i> New Issue
+              class="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors flex-shrink-0">
+              <i class="ri-add-line"></i>
+              <span class="hidden xs:inline sm:inline">New Issue</span>
             </button>
           </div>
         </div>
       </nav>
 
       <!-- PAGE BODY -->
-      <div class="max-w-6xl mx-auto px-4 py-6">
+      <div class="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
 
         <!-- TABS -->
         <div class="flex gap-2 mb-4">
           <button data-tab="all"
-            class="tab-btn tab-btn-active px-5 py-1.5 rounded-full text-sm font-medium border border-indigo-600 transition-all">All</button>
+            class="tab-btn tab-btn-active px-4 sm:px-5 py-1.5 rounded-full text-sm font-medium border border-indigo-600 transition-all">All</button>
           <button data-tab="open"
-            class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Open</button>
+            class="tab-btn px-4 sm:px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Open</button>
           <button data-tab="closed"
-            class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Closed</button>
+            class="tab-btn px-4 sm:px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Closed</button>
         </div>
 
         <!-- ISSUES PANEL -->
         <div class="bg-white rounded-xl shadow-sm border border-[#e4e4e7] overflow-hidden">
 
           <!-- Panel Header -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 border-b border-[#f1f5f9]">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-5 py-4 border-b border-[#f1f5f9] gap-3">
             <div class="flex items-center gap-3">
-              <img src="./assets/Aperture.png" alt="Aperture" class="w-10 h-10 rounded-full object-cover" />
+              <img src="./assets/Aperture.png" alt="Aperture" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover flex-shrink-0" />
               <div>
-                <p id="issueCount" class="font-bold text-[1.05rem] text-[#1F2937]">0 Issues</p>
+                <p id="issueCount" class="font-bold text-[1rem] sm:text-[1.05rem] text-[#1F2937]">0 Issues</p>
                 <p class="text-xs text-[#64748b]">Track and manage your project issues</p>
               </div>
             </div>
-            <!-- Static labels only — no dynamic counts -->
-            <div class="flex items-center gap-4 mt-3 sm:mt-0 text-sm">
+            <!-- Static open/closed labels -->
+            <div class="flex items-center gap-4 text-sm ml-12 sm:ml-0">
               <span class="flex items-center gap-1.5 text-[#374151]">
-                <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block flex-shrink-0"></span>
                 Open
               </span>
               <span class="flex items-center gap-1.5 text-[#374151]">
-                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block flex-shrink-0"></span>
                 Closed
               </span>
             </div>
           </div>
 
           <!-- SPINNER -->
-          <div id="spinner" class="show flex justify-center items-center py-16">
+          <div id="spinner" style="display:flex" class="flex justify-center items-center py-16">
             <span class="loading loading-spinner loading-md text-indigo-600"></span>
             <span class="ml-3 text-sm text-[#64748b]">Loading issues...</span>
           </div>
 
-          <!-- GRID -->
-          <div id="issuesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4"></div>
+          <!-- GRID: 1 col mobile, 2 col tablet, 3 col md, 4 col lg -->
+          <div id="issuesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 p-3 sm:p-4"></div>
 
           <!-- NO RESULTS -->
-          <div id="noResults" class="text-center py-16 text-[#94a3b8]">
+          <div id="noResults" style="display:none" class="text-center py-16 text-[#94a3b8]">
             <i class="ri-search-eye-line text-4xl mb-3 block"></i>
             <p class="font-medium">No issues found</p>
           </div>
@@ -131,3 +130,4 @@
       <script src="./js/main.js?v=1774705237990" type="module"></script>
     </body>
   </html>
+  
