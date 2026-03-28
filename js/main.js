@@ -10,7 +10,6 @@ import { fetchAllIssues, searchIssues } from "./api.js";
   const modal = document.getElementById("issueModal");
   const modalContent = document.getElementById("modalContent");
   const searchInput = document.getElementById("searchInput");
-  const searchBtn = document.getElementById("searchBtn");
 
   let allIssues = [];
   let currentTab = "all";
@@ -37,11 +36,11 @@ import { fetchAllIssues, searchIssues } from "./api.js";
   }
 
   function updateCounts(issues) {
-    const open = issues.filter((i) => i.status?.toLowerCase() === "open").length;
-    const closed = issues.filter((i) => i.status?.toLowerCase() === "closed").length;
-    issueCount.textContent = `${issues.length} Issue${issues.length !== 1 ? "s" : ""}`;
-    openCount.textContent = `${open} Open`;
-    closedCount.textContent = `${closed} Closed`;
+    const open   = allIssues.filter((i) => i.status?.toLowerCase() === "open").length;
+    const closed = allIssues.filter((i) => i.status?.toLowerCase() === "closed").length;
+    issueCount.textContent   = `${allIssues.length} Issue${allIssues.length !== 1 ? "s" : ""}`;
+    openCount.textContent    = `${open} Open`;
+    closedCount.textContent  = `${closed} Closed`;
   }
 
   function openModal(issue) {
@@ -59,21 +58,21 @@ import { fetchAllIssues, searchIssues } from "./api.js";
     });
   }
 
-  function filterByTab(issues, tab) {
-    if (tab === "all") return issues;
-    return issues.filter((i) => i.status?.toLowerCase() === tab);
+  function filterByTab(tab) {
+    if (tab === "all") return allIssues;
+    return allIssues.filter((i) => i.status?.toLowerCase() === tab);
   }
 
   function setActiveTab(tab) {
     currentTab = tab;
     document.querySelectorAll(".tab-btn").forEach((b) => {
-      b.classList.remove("btn-primary");
-      b.classList.add("btn-ghost", "text-[#64748B]");
+      b.classList.remove("tab-btn-active", "bg-white");
+      b.classList.add("bg-white");
     });
     const active = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
     if (active) {
-      active.classList.add("btn-primary");
-      active.classList.remove("btn-ghost", "text-[#64748B]");
+      active.classList.add("tab-btn-active");
+      active.classList.remove("bg-white");
     }
   }
 
@@ -81,29 +80,27 @@ import { fetchAllIssues, searchIssues } from "./api.js";
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       setActiveTab(btn.dataset.tab);
-      // Clear search on tab switch
       searchInput.value = "";
-      renderIssues(filterByTab(allIssues, currentTab));
-      updateCounts(filterByTab(allIssues, currentTab));
+      renderIssues(filterByTab(currentTab));
     });
   });
 
-  // Search functionality
+  // Search on Enter or input change
   async function handleSearch() {
     const query = searchInput.value.trim();
     if (!query) {
-      renderIssues(filterByTab(allIssues, currentTab));
-      updateCounts(filterByTab(allIssues, currentTab));
+      renderIssues(filterByTab(currentTab));
       return;
     }
     setLoading(true);
     try {
       const data = await searchIssues(query);
       const results = Array.isArray(data) ? data : (data.issues ?? data.data ?? []);
-      updateCounts(results);
+      // Merge into allIssues for modal lookup
+      const map = new Map(allIssues.map((i) => [String(i.id), i]));
+      results.forEach((i) => map.set(String(i.id), i));
+      allIssues = [...map.values()];
       renderIssues(results);
-      // Update allIssues ref for modal lookup during search
-      allIssues = [...new Map([...allIssues, ...results].map((i) => [i.id, i])).values()];
     } catch (err) {
       console.error(err);
       grid.innerHTML = `<p class="text-red-500 col-span-4 text-center py-10">Search failed. Please try again.</p>`;
@@ -112,19 +109,20 @@ import { fetchAllIssues, searchIssues } from "./api.js";
     }
   }
 
-  searchBtn.addEventListener("click", handleSearch);
-  searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") handleSearch();
-  });
+  searchInput.addEventListener("keydown", (e) => { if (e.key === "Enter") handleSearch(); });
 
-  // Load all issues on mount
+  // Prevent New Issue button from doing anything (not required)
+  const newIssueBtn = document.getElementById("newIssueBtn");
+  if (newIssueBtn) newIssueBtn.addEventListener("click", () => {});
+
+  // Init
   async function init() {
     setLoading(true);
     try {
       const data = await fetchAllIssues();
       allIssues = Array.isArray(data) ? data : (data.issues ?? data.data ?? []);
       updateCounts(allIssues);
-      renderIssues(filterByTab(allIssues, currentTab));
+      renderIssues(filterByTab(currentTab));
     } catch (err) {
       console.error(err);
       grid.innerHTML = `<p class="text-red-500 col-span-4 text-center py-10">Failed to load issues. Please refresh.</p>`;
