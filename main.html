@@ -7,28 +7,34 @@
       <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
       <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
       <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet" />
       <style>
         * { font-family: "Geist", sans-serif; }
-        .card-open  { border-top: 3px solid #22c55e; }
+        .card-open   { border-top: 3px solid #22c55e; }
         .card-closed { border-top: 3px solid #a855f7; }
-        #spinner { display: none; }
+        #spinner     { display: none; }
         #spinner.show { display: flex; }
+        #noResults   { display: none; }
+        #noResults.show { display: block; }
         .tab-btn-active {
           background-color: #6366f1 !important;
           color: #fff !important;
           border-color: #6366f1 !important;
         }
-        .priority-HIGH   { background:#fce7f3; color:#be185d; font-weight:600; }
-        .priority-MEDIUM { background:#fff7ed; color:#ea580c; font-weight:600; }
-        .priority-LOW    { background:#f1f5f9; color:#64748b; font-weight:600; }
+        .priority-HIGH   { background:#fce7f3; color:#be185d; }
+        .priority-MEDIUM { background:#fff7ed; color:#ea580c; }
+        .priority-LOW    { background:#f1f5f9; color:#64748b; }
         .label-pill {
-          display:inline-flex; align-items:center; gap:4px;
-          border-radius:9999px; font-size:.7rem; padding:2px 8px;
-          font-weight:500;
+          display: inline-flex;
+          align-items: center;
+          border-radius: 9999px;
+          font-size: .7rem;
+          padding: 2px 8px;
+          font-weight: 500;
+          white-space: nowrap;
         }
       </style>
     </head>
@@ -37,23 +43,18 @@
       <!-- NAVBAR -->
       <nav class="bg-white border-b border-[#e4e4e7] px-6 py-3 sticky top-0 z-20 shadow-sm">
         <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          <!-- Logo + Title -->
           <div class="flex items-center gap-2">
             <img src="./assets/github-logo.png" alt="GitHub Logo" class="w-8 h-8" />
             <span class="font-semibold text-[1.05rem] text-[#1F2937]">GitHub Issues Tracker</span>
           </div>
-          <!-- Search + New Issue -->
           <div class="flex items-center gap-3">
             <div class="relative">
               <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8] text-sm"></i>
-              <input
-                id="searchInput"
-                type="text"
-                placeholder="Search issues..."
-                class="pl-9 pr-4 py-2 border border-[#e4e4e7] rounded-lg text-sm w-56 focus:outline-none focus:border-indigo-400 bg-[#f8fafc]"
-              />
+              <input id="searchInput" type="text" placeholder="Search issues..."
+                class="pl-9 pr-4 py-2 border border-[#e4e4e7] rounded-lg text-sm w-56 focus:outline-none focus:border-indigo-400 bg-[#f8fafc]" />
             </div>
-            <button id="newIssueBtn" class="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+            <button id="newIssueBtn"
+              class="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
               <i class="ri-add-line"></i> New Issue
             </button>
           </div>
@@ -65,9 +66,12 @@
 
         <!-- TABS -->
         <div class="flex gap-2 mb-4">
-          <button data-tab="all" class="tab-btn tab-btn-active px-5 py-1.5 rounded-full text-sm font-medium border border-indigo-600 transition-all">All</button>
-          <button data-tab="open" class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Open</button>
-          <button data-tab="closed" class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Closed</button>
+          <button data-tab="all"
+            class="tab-btn tab-btn-active px-5 py-1.5 rounded-full text-sm font-medium border border-indigo-600 transition-all">All</button>
+          <button data-tab="open"
+            class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Open</button>
+          <button data-tab="closed"
+            class="tab-btn px-5 py-1.5 rounded-full text-sm font-medium border border-[#e4e4e7] bg-white text-[#374151] hover:border-indigo-400 transition-all">Closed</button>
         </div>
 
         <!-- ISSUES PANEL -->
@@ -96,7 +100,7 @@
             </div>
           </div>
 
-          <!-- SPINNER -->
+          <!-- SPINNER (shown by default until JS runs) -->
           <div id="spinner" class="show flex justify-center items-center py-16">
             <span class="loading loading-spinner loading-md text-indigo-600"></span>
             <span class="ml-3 text-sm text-[#64748b]">Loading issues...</span>
@@ -105,11 +109,12 @@
           <!-- GRID -->
           <div id="issuesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4"></div>
 
-          <!-- NO RESULTS -->
-          <div id="noResults" class="hidden text-center py-16 text-[#94a3b8]">
+          <!-- NO RESULTS (hidden by default via CSS) -->
+          <div id="noResults" class="text-center py-16 text-[#94a3b8]">
             <i class="ri-search-eye-line text-4xl mb-3 block"></i>
             <p class="font-medium">No issues found</p>
           </div>
+
         </div>
       </div>
 
