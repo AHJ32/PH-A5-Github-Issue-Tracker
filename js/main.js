@@ -1,6 +1,6 @@
-// main.js v1774707800705
-  import { fetchAllIssues, searchIssues } from "./api.js?v=1774707800705";
-  import { buildCard, buildModal } from "./ui.js?v=1774707800705";
+// main.js v1774707898675
+  import { fetchAllIssues, searchIssues } from "./api.js?v=1774707898675";
+  import { buildCard, buildModal } from "./ui.js?v=1774707898675";
 
   var grid        = document.getElementById("issuesGrid");
   var spinner     = document.getElementById("spinner");
@@ -39,7 +39,6 @@
     currentTab = tab;
     document.querySelectorAll(".tab-btn").forEach(function(b) {
       b.classList.remove("tab-btn-active");
-      b.style.backgroundColor=""; b.style.color=""; b.style.borderColor="";
     });
     var a = document.querySelector('.tab-btn[data-tab="'+tab+'"]');
     if (a) a.classList.add("tab-btn-active");
@@ -62,7 +61,7 @@
       results.forEach(function(i){ map[String(i.id)]=i; });
       allIssues=Object.values(map);
       renderIssues(results);
-    }).catch(function(err){
+    }).catch(function(){
       grid.innerHTML='<p class="text-red-500 col-span-4 text-center py-10">Search failed.</p>';
       setCount(0);
     }).finally(function(){ setLoading(false); });
@@ -72,7 +71,6 @@
     allIssues=data;
     renderIssues(filterByTab(currentTab));
   }).catch(function(err){
-    console.error(err);
     grid.innerHTML='<p class="text-red-500 col-span-4 text-center py-10">Failed to load issues: '+err.message+"</p>";
     setCount(0);
   }).finally(function(){ setLoading(false); });
